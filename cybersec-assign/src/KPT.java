@@ -85,6 +85,7 @@ public class KPT {
         	int key;
 			try {
 				key = findKey("inputs/pt1.txt", "inputs/ct1.txt");
+				
 				for (;;)
 				{
 					
@@ -96,8 +97,6 @@ public class KPT {
 					
 				}
 			} catch (FileNotFoundException | EofX e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
         	
         
@@ -121,8 +120,6 @@ public class KPT {
     			fout.print((char)c1);
     		}
         	} catch (EofX e) {
-        		// TODO Auto-generated catch block
-        		e.printStackTrace();
         	}
     	}
 		
@@ -153,6 +150,7 @@ public class KPT {
 			readEncryptFile();
 			toText(); 
 			printFile();
+			
 		
        
         
