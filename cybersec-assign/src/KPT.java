@@ -1,165 +1,75 @@
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Scanner;
 
-import FormatIO.EofX;
-import FormatIO.FileIn;
-import FormatIO.FileOut;
 
 public class KPT {
-
-	public static String readFile(String pathname) throws FileNotFoundException {
-	    File file = new File(pathname);
-	    StringBuilder fileContents = new StringBuilder((int)file.length());
-	    Scanner scanner = new Scanner(file);
-	    String lineSeparator = System.getProperty("line.separator");
-
-	    try {
-	        while(scanner.hasNextLine()) {        
-	            fileContents.append(scanner.nextLine() + lineSeparator);
-	        }
-	        return fileContents.toString();
-	    } finally {
-	        scanner.close();
-	    }
-	}
 	
-	
-	@SuppressWarnings("static-access")
-	public static String readFileToInts(String pathname) throws FileNotFoundException {
-		Hex16 hex16 = new Hex16();
-
-	    File file = new File(pathname);
-	    StringBuilder fileContents = new StringBuilder((int)file.length());
-	    Scanner scanner = new Scanner(file);
-	    String lineSeparator = System.getProperty("line.separator");
-
-	    try {
-	        while(scanner.hasNextLine()) {        
-	            fileContents.append(hex16.convert(scanner.nextLine() ) + lineSeparator);
-	        }
-	        return fileContents.toString();
-	    } finally {
-	        scanner.close();
-	    }
-	}
-	
-	
-	public static int findKey(String pt, String ct) throws FileNotFoundException{
-	
-		
-		//read first block of the cipher text and convert it to int
-		String first_ct_block = readFileToInts(ct);
-		int first_ct_block_int = Integer.parseInt(first_ct_block.split("\n")[0]);
-		
-		
-		int keyInt = 0;
-		
-        try {
-			String pt1 = readFile(pt);
-			//find the key
-			for (int i = 0; i < 65536; i++) {
-				int encrypted = Coder.encrypt(i, Hex16.convert(pt1));
-				if (encrypted==first_ct_block_int) {
-					keyInt=i;
-				}
-			}
+	private static String toText(String[] lines_pt){
+		String decrypted_t="";
+		//convert into text
+		int len2 = lines_pt.length;
+		for (int l = 1; l< len2; l++) {
+			String s = lines_pt[l];
+			int	c = Hex16.convert(s);
+			int	c0 = c / 256;
+			int	c1 = c % 256;
+			decrypted_t+=(char)c0;
 			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (c1 != 0)
+				decrypted_t+=(char)c1;
 		}
-        return keyInt;	
+		return decrypted_t;
 	}
-
-	public static void readEncryptFile() {
-		
-		// open files
-        FileIn	fin  = new FileIn("inputs/ct1.txt");
-        FileOut fout = new FileOut("outputs/enc1.txt");
 	
-        // read blocks, encrypt and output blocks
-        	int key;
-			try {
-				key = findKey("inputs/pt1.txt", "inputs/ct1.txt");
-				
-				for (;;)
-				{
-					
-					String	s = fin.readWord();
-					int	c = Hex16.convert(s);
+	public static void main(String[] args) throws FileNotFoundException {
+		//read the files into String array
+		String ct = new Scanner(new File("inputs/ct1.txt")).useDelimiter("\\Z").next();
+		String ct1 = ct.split(System.getProperty("line.separator"))[0];
+		
+		String pt = new Scanner(new File("inputs/pt1.txt")).useDelimiter("\\Z").next();
+		
+		int key=0;
+		
+		int len = ct.split(System.getProperty("line.separator")).length;
+		//itterate through all possible keys
+		for (int i = 0; i < 65536; i++) {
+			
+					key=i;
+					int	c = Hex16.convert(ct1);
 					int	p = Coder.decrypt(key, c);
-					String	out = String.format("0x%04x", p);
-					fout.println(out);
-					
-				}
-			} catch (FileNotFoundException | EofX e) {
-			}
-        	
-        
-        }
-	
-	public static void toText(){
-		FileIn fin  = new FileIn("outputs/enc1.txt");
-        FileOut fout = new FileOut("outputs/enc1_text.txt");
-        
-        
-        try {
-    		for (;;)
-    		{
-    			String s;
-					s = fin.readWord();
-    			int	i = Hex16.convert(s);
-    			int	c0 = i / 256;
-    			int	c1 = i % 256;
-    			fout.print((char)c0);
-    			if (c1 != 0)
-    			fout.print((char)c1);
-    		}
-        	} catch (EofX e) {
-        	}
-    	}
-		
-	
-	
-	
-	
-	
-	public static void printFile(){
-    		BufferedReader br;
-			try {
-				br = new BufferedReader(new FileReader("outputs/enc1_text.txt"));
-				String line = null;
-				while ((line = br.readLine()) != null) {
-					System.out.println(line);
-				}
-				br.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	}
-	
-	
-	public static void main(String[] args) {
-        
+					String decrypted = String.format("0x%04x", p);
 
-			readEncryptFile();
-			toText(); 
-			printFile();
-			
+					//check if we found a match
+					if(decrypted.equals(pt)) break;
 		
-       
-        
-
-        
-        
 		}
-	
+
+		System.out.println("The key is:   "+key);
+		
+		String[] lines_ct = ct.split(System.getProperty("line.separator"));
+		String decrypted="";
+		
+		//decrypt the cipher text
+		for (int i = 0; i < len; i++) {
+				String	s = lines_ct[i];
+				int	c = Hex16.convert(s);
+				int	p = Coder.decrypt(key, c);
+				String	out = String.format("0x%04x", p);
+				decrypted+="\n"+out;
+			
+		}
+		
+		String[] lines_pt = decrypted.split(System.getProperty("line.separator"));
+		
+		
+		String decrypted_t = toText(lines_pt);
+		
+
+		
+		
+		System.out.println("Decrypted text:      "+ decrypted_t);
+			
+	}
 
 }
-
-

@@ -1,42 +1,14 @@
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import FormatIO.EofX;
-import FormatIO.FileIn;
-import FormatIO.FileOut;
 
 
 public class CTO {
 	
-	
-	public static void toText(){
-		FileIn fin  = new FileIn("outputs/pt2.txt");
-        FileOut fout = new FileOut("outputs/pt2_text.txt");
-        
-        
-        try {
-    		for (;;)
-    		{
-    			String s;
-					s = fin.readWord();
-    			int	i = Hex16.convert(s);
-    			int	c0 = i / 256;
-    			int	c1 = i % 256;
-    			fout.print((char)c0);
-    			if (c1 != 0)
-    			fout.print((char)c1);
-    		}
-        	} catch (EofX e) {
-        	}
-    	}
-	
 	//most frquent letters in english e, t, a, o, i, n, s
-	
 	public static int[] countLetters(String text) throws IOException{
 	   
 	    ArrayList<String> letterPos= new ArrayList<String>();
@@ -67,22 +39,21 @@ public class CTO {
 		return letterCounts;
 		
 	}
-	
-	
 
-	
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		
-		
-		String ct = new Scanner(new File("inputs/ct1.txt")).useDelimiter("\\Z").next();
+		//read the file into String array
+		String ct = new Scanner(new File("inputs/ct2.txt")).useDelimiter("\\Z").next();
 		String[] lines = ct.split(System.getProperty("line.separator"));
-		
+
 		
 		int len = ct.split(System.getProperty("line.separator")).length;
+		//itterate through all possible keys
 		for (int key = 0; key < 65536; key++) {
-			key = 36460;
 			String pt="";
+			
+			//decrypt the cipher text
 			for (int i = 0; i < len; i++) {
 					String	s = lines[i];
 					int	c = Hex16.convert(s);
@@ -91,33 +62,49 @@ public class CTO {
 					pt+="\n"+out;
 				
 			}
-			
 			String pt_t="";
 			
 			String[] lines_pt = pt.split(System.getProperty("line.separator"));
 			int len2 = pt.split(System.getProperty("line.separator")).length;
 			
-			for (int i = 0; i < len2; i++) {
-				String s = lines_pt[i];
+			//convert into text
+			for (int l = 1; l< len2; l++) {
+				String s = lines_pt[l];
 				int	c = Hex16.convert(s);
 				int	c0 = c / 256;
 				int	c1 = c % 256;
-				pt_t+="\n"+(char)c0;
+				pt_t+=(char)c0;
 				
 				if (c1 != 0)
-					pt_t+="\n"+(char)c1;
+					pt_t+=(char)c1;
 			}
 			
-		System.out.println(pt_t);
+
 			
+			
+			
+			//method 2
+			ArrayList<String> wordList = new ArrayList<String>();
+			String[] split = pt_t.split(" ");
+			for (String string : split) {
+				wordList.add(string);
+			}
+			
+			if(wordList.contains("the")){
+				
+				System.out.println("Decrypted:  \n"+pt_t+"\n");
+
+			}
+			
+
+//			//method1
 //			ArrayList<Integer> freq = new ArrayList<>();
-//			
 //			try {
 //				int[] count = countLetters(pt_t);
 //				count[27]=0;
 //				//most frquent letters in english e, t, a, o, i, n, s
 //				//{"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z
-//				for (int k = 0; k < 20; k++) {
+//				for (int k = 0; k < 6; k++) {
 //					
 //					int maxIndex = 0;
 //					for (int i = 1; i < count.length; i++){
@@ -129,25 +116,17 @@ public class CTO {
 //					freq.add(maxIndex);
 //					count[maxIndex]=0;
 //				
-//					
 //				}
-//				
-//				if(freq.get(0)==4 && freq.get(1)==19  && freq.get(2)==0){
-//				System.out.println("This is the key:   " + key);
-//				}
-//				
 //				
 //			} catch (IOException e) {
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
-//			
-		}
-		
-
+//			if(freq.contains(0) && freq.contains(26) &&  freq.contains(19) && freq.contains(4) ){
+//				System.out.println(pt_t+"\n--------------------");
+//			}
 			
 		
-	
+		}
 	}
-	
 }
