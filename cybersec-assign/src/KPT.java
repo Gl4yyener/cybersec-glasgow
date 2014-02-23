@@ -5,6 +5,16 @@ import java.util.Scanner;
 
 public class KPT {
 	
+	public static void main(String[] args) {
+		try {
+			System.out.println(bruteForce("src/files/pt1.txt", "src/files/ct1.txt"));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	private static String toText(String[] lines_pt){
 		String decrypted_t="";
 		//convert into text
@@ -22,12 +32,13 @@ public class KPT {
 		return decrypted_t;
 	}
 	
-	public static void main(String[] args) throws FileNotFoundException {
+	@SuppressWarnings("resource")
+	public static String bruteForce(String pt_file, String ct_file) throws FileNotFoundException {
 		//read the files into String array
-		String ct = new Scanner(new File("inputs/ct1.txt")).useDelimiter("\\Z").next();
+		String ct = new Scanner(new File(ct_file)).useDelimiter("\\Z").next();
 		String ct1 = ct.split(System.getProperty("line.separator"))[0];
 		
-		String pt = new Scanner(new File("inputs/pt1.txt")).useDelimiter("\\Z").next();
+		String pt = new Scanner(new File(pt_file)).useDelimiter("\\Z").next();
 		
 		int key=0;
 		
@@ -68,7 +79,7 @@ public class KPT {
 
 		
 		
-		System.out.println("Decrypted text:      "+ decrypted_t);
+		return("Decrypted text:      "+ decrypted_t);
 			
 	}
 
