@@ -1,0 +1,43 @@
+\documentclass[11pt]{article}
+%Gummi|061|=)
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage[normalem]{ulem}
+
+\title{\textbf{Assessed Exercise 1 }}
+\author{Anders Kofoed - 2120935\\
+\texttt{2120935k@student.gla.ac.uk}\\
+	Cyber Security - University of Glasgow}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Known Plain Text Attack}
+Key found: \underline{36460}\\\footnote{Used code from provided classes; DecryptAllBlocks.-, Hex16.- and BlockToText.java as well as standard java.util and java.ui libraries.}
+Decrypted message: An expert is a person who avoids the small errors while sweeping on to the grand fallacy
+
+
+\section{Cipher Text Only Attack}
+Key found: \underline{21346}\\
+Decrypted message: His manuscript was both good and original, but the part that was good was not original, and the part that was original was not good \\
+\\
+To determine the required number of blocks to decrypt the message, we can look at the unicity distance \cite{ud}. Since we have a key length of 16 bits, and we assume that all keys are equally likely or random, we get an key entropy of H(K=16) = 16. The redundancy of the English language is measured to be approximately D=\uline{3.2} \cite{ud}. This gives us an unicity distance of U= 16/3.2 = \underline{\underline{5}}. Which means that in theory it should be sufficient with 5 blocks of data.\\	  
+Number of blocks needed from experiment:  \underline{\underline{14}}\\
+These results make sense, since my implementation used the pretty ineffective algorithm of looking for whole English, 3-letter words, a faster way would be to look for n-grams of length 2 or 3 \cite{ngram}. I chose not to change my implementation since the assignment didn't present any requirements on performance.
+
+\section{Time Memory Tradeoff}
+Key found:  \underline{6232}\\ \footnote{Used provided classes Table.-, DecryptAllBlock.-, Hex16.- and BlockToText.java as well as standard java.util and java.ui libraries.}
+Decrypted message: Do not meddle in the affairs of wizards for they are easily angered
+
+\begin{thebibliography}{N}\label{sec:references}
+\bibitem{ud} Unicity Distance \textit{Practical cryptegraphy} \url{practicalcryptography.com/cryptanalysis/text-characterisation/statistics/}
+
+\bibitem{ngram} Frequency analysis \textit{Read 12:13PM, 24. February.} \url{http://en.wikipedia.org/wiki/Frequency_analysis}
+
+\end{thebibliography}
+
+
+
+\end{document}
