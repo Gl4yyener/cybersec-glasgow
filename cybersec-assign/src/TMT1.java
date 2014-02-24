@@ -9,8 +9,7 @@ public class TMT1 {
 
 	public static void main(String[] args) {
 		try {
-			//l number of links(time), n  numer of chains(storage)
-			//(l,n)
+			
 			buildTable(66, 1000, "src/files/pt3.txt", "src/files/table.txt");
 			
 		} catch (IOException e) {
@@ -24,6 +23,7 @@ public class TMT1 {
 		String pt_block1 = new Scanner(new File(pt_block)).useDelimiter("\\Z").next();
 		PrintWriter writer = new PrintWriter("src/files/table.txt", "UTF-8");
 		
+		//writes n chains to file
 		for (int i = 0; i < n; i++) {
 			buildChain(pt_block1, l, writer);
 			
@@ -31,7 +31,7 @@ public class TMT1 {
 		writer.close();
 	}
 	
-	
+	//builds a chains of length l and writes it using the provided fileWriter
 	public static void buildChain(String pt, int l, PrintWriter writer) throws IOException{
 		
 		//initial encrypion link
@@ -40,7 +40,6 @@ public class TMT1 {
 		//create l-1 more links
 		for (int i = 0; i < l; i++) {
 			x = Coder.encrypt(x, Hex16.convert(pt));
-			
 		}
 		
 		//write chain to file

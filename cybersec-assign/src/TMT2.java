@@ -11,29 +11,32 @@ public class TMT2 {
 	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 		try {
-			Table table = readTableFile("outputs/table.txt");
 			
+			String ct_file="src/files/ct3.txt";
+			String pt_file="src/files/pt3.txt";
+			String table_file="src/files/table.txt";
 			
-			String ct = new Scanner(new File("src/files/ct3.txt")).useDelimiter("\\Z").next();
+			//reads the file into the associative array.
+			Table table = readTableFile(table_file);
+			
+			String ct = new Scanner(new File(ct_file)).useDelimiter("\\Z").next();
 			String ct_block1 = ct.split(System.getProperty("line.separator"))[0];
-			
 			int ct_block1_int = Hex16.convert(ct_block1);
-			String pt_block1 = new Scanner(new File("src/files/pt3.txt")).useDelimiter("\\Z").next();
+
+			String pt_block1 = new Scanner(new File(pt_file)).useDelimiter("\\Z").next();
 			int pt_block1_int = Hex16.convert(pt_block1);
 			
+			//searches for the key.
 			int key = findKey(table, ct_block1_int, pt_block1_int);
 			
+			//decrypts using the key.
 			String decrypted = decryptToText(ct, key);
 			
-
 			System.out.println("Key:  " + key + "\n" + "Decrypted:     " + decrypted);
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 		
 	}
 	

@@ -9,7 +9,6 @@ public class KPT {
 		try {
 			System.out.println(bruteForce("src/files/pt1.txt", "src/files/ct1.txt"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
